@@ -21,6 +21,10 @@ Custom [Home Assistant](https://www.home-assistant.io/) integration for 2025 Lyn
 ### Lock
 - Door lock / unlock
 
+### Screenshot
+
+![screenshot](screenshot.png)
+
 ## Installation
 
 ### HACS (recommended)

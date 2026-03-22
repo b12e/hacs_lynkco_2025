@@ -31,3 +31,4 @@ __pycache__/
 *.log
 .metals/
 .vscode/
+dashboard.yaml

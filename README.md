@@ -28,6 +28,7 @@ It was tested with the 2025 Lynk&Co 01.
 ### Actions (Services)
 | Service | Description |
 |---|---|
+| `lynkco.refresh` | Force-refresh all sensors now |
 | `lynkco.flash_lights` | Flash the vehicle's lights |
 | `lynkco.honk_horn` | Honk the horn |
 | `lynkco.open_sunroof` | Open the sunroof |

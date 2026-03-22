@@ -30,6 +30,7 @@ SERVICE_START_HEATERS = "start_heaters"
 SERVICE_STOP_HEATERS = "stop_heaters"
 SERVICE_START_CONDITIONING = "start_conditioning"
 SERVICE_STOP_CONDITIONING = "stop_conditioning"
+SERVICE_REFRESH = "refresh"
 
 ATTR_TEMP = "temp"
 
@@ -126,6 +127,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             api = _get_api(hass, call.data[ATTR_VIN])
             await api.stop_heaters(call.data[ATTR_VIN])
 
+        async def handle_refresh(call: ServiceCall) -> None:
+            vin = call.data[ATTR_VIN]
+            for entry_data in hass.data.get(DOMAIN, {}).values():
+                coordinator = entry_data.get("coordinators", {}).get(vin)
+                if coordinator:
+                    await coordinator.async_request_refresh()
+                    return
+            raise vol.Invalid(f"VIN {vin} not found")
+
         async def handle_start_conditioning(call: ServiceCall) -> None:
             api = _get_api(hass, call.data[ATTR_VIN])
             await api.start_conditioning(call.data[ATTR_VIN], call.data[ATTR_TEMP])
@@ -143,6 +153,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.services.async_register(DOMAIN, SERVICE_STOP_VENTILATE, handle_stop_ventilate, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_START_HEATERS, handle_start_heaters, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_STOP_HEATERS, handle_stop_heaters, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_REFRESH, handle_refresh, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_START_CONDITIONING, handle_start_conditioning, CONDITIONING_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_STOP_CONDITIONING, handle_stop_conditioning, VIN_SCHEMA)
 
@@ -162,6 +173,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 SERVICE_SET_CHARGE_LIMIT,
                 SERVICE_START_VENTILATE, SERVICE_STOP_VENTILATE,
                 SERVICE_START_HEATERS, SERVICE_STOP_HEATERS,
+                SERVICE_REFRESH,
                 SERVICE_START_CONDITIONING, SERVICE_STOP_CONDITIONING,
             ]:
                 hass.services.async_remove(DOMAIN, service)

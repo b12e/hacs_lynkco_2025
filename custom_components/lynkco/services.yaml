@@ -1,3 +1,14 @@
+refresh:
+  name: Refresh sensors
+  description: Force an immediate refresh of all vehicle sensors.
+  fields:
+    vin:
+      name: VIN
+      description: Vehicle Identification Number
+      required: true
+      selector:
+        text:
+
 flash_lights:
   name: Flash lights
   description: Flash the vehicle's lights.

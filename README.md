@@ -105,7 +105,9 @@ Tokens are automatically refreshed. You should only need to re-authenticate if t
 
 ## Polling
 
-Vehicle data is polled every 15 minutes by default.
+Vehicle data is polled every 15 minutes by default. If you want to poll more frequently, you can do so using Home Assistant automations by calling the update action, although I don't recommend to update more often 24/7. 
+
+Data is also refreshed by default after any other action is called.
 
 ## Supported Models
 

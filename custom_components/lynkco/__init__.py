@@ -1,5 +1,6 @@
 """Lynk & Co integration for Home Assistant."""
 
+import asyncio
 import logging
 
 import voluptuous as vol
@@ -45,12 +46,31 @@ CONDITIONING_SCHEMA = vol.Schema({
 })
 
 
+ACTION_REFRESH_DELAY = 5  # seconds to wait before refreshing after an action
+
+
 def _get_api(hass: HomeAssistant, vin: str) -> LynkCoAPI:
     """Find the API instance that owns a given VIN."""
     for entry_data in hass.data.get(DOMAIN, {}).values():
         if vin in entry_data.get("coordinators", {}):
             return entry_data["api"]
     raise vol.Invalid(f"VIN {vin} not found")
+
+
+def _get_coordinator(hass: HomeAssistant, vin: str) -> LynkCoCoordinator | None:
+    for entry_data in hass.data.get(DOMAIN, {}).values():
+        coordinator = entry_data.get("coordinators", {}).get(vin)
+        if coordinator:
+            return coordinator
+    return None
+
+
+async def _delayed_refresh(hass: HomeAssistant, vin: str) -> None:
+    """Schedule a sensor refresh after a short delay to pick up new state."""
+    await asyncio.sleep(ACTION_REFRESH_DELAY)
+    coordinator = _get_coordinator(hass, vin)
+    if coordinator:
+        await coordinator.async_request_refresh()
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -92,57 +112,67 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register services (only once)
     if not hass.services.has_service(DOMAIN, SERVICE_FLASH_LIGHTS):
         async def handle_flash_lights(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.flash_lights(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).flash_lights(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_honk_horn(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.honk_horn(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).honk_horn(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_open_sunroof(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.open_sunroof(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).open_sunroof(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_close_sunroof(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.close_sunroof(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).close_sunroof(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_set_charge_limit(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.set_charge_limit(call.data[ATTR_VIN], call.data[ATTR_PERCENT])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).set_charge_limit(vin, call.data[ATTR_PERCENT])
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_start_ventilate(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.start_ventilate(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).start_ventilate(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_stop_ventilate(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.stop_ventilate(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).stop_ventilate(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_start_heaters(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.start_heaters(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).start_heaters(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_stop_heaters(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.stop_heaters(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).stop_heaters(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_refresh(call: ServiceCall) -> None:
             vin = call.data[ATTR_VIN]
-            for entry_data in hass.data.get(DOMAIN, {}).values():
-                coordinator = entry_data.get("coordinators", {}).get(vin)
-                if coordinator:
-                    await coordinator.async_request_refresh()
-                    return
-            raise vol.Invalid(f"VIN {vin} not found")
+            coordinator = _get_coordinator(hass, vin)
+            if coordinator:
+                await coordinator.async_request_refresh()
+            else:
+                raise vol.Invalid(f"VIN {vin} not found")
 
         async def handle_start_conditioning(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.start_conditioning(call.data[ATTR_VIN], call.data[ATTR_TEMP])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).start_conditioning(vin, call.data[ATTR_TEMP])
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_stop_conditioning(call: ServiceCall) -> None:
-            api = _get_api(hass, call.data[ATTR_VIN])
-            await api.stop_conditioning(call.data[ATTR_VIN])
+            vin = call.data[ATTR_VIN]
+            await _get_api(hass, vin).stop_conditioning(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
 
         hass.services.async_register(DOMAIN, SERVICE_FLASH_LIGHTS, handle_flash_lights, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_HONK_HORN, handle_honk_horn, VIN_SCHEMA)

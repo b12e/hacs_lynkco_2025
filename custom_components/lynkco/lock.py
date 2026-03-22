@@ -1,5 +1,6 @@
 """Lock platform for Lynk & Co integration."""
 
+import asyncio
 import logging
 
 from homeassistant.components.lock import LockEntity
@@ -56,12 +57,16 @@ class LynkCoLock(CoordinatorEntity, LockEntity):
             return None
         return status == "LOCKED"
 
+    async def _delayed_refresh(self) -> None:
+        await asyncio.sleep(5)
+        await self.coordinator.async_request_refresh()
+
     async def async_lock(self, **kwargs) -> None:
         _LOGGER.info("Locking %s", self.coordinator.vin)
         await self._api.lock_door(self.coordinator.vin)
-        await self.coordinator.async_request_refresh()
+        self.hass.async_create_task(self._delayed_refresh())
 
     async def async_unlock(self, **kwargs) -> None:
         _LOGGER.info("Unlocking %s", self.coordinator.vin)
         await self._api.unlock_door(self.coordinator.vin)
-        await self.coordinator.async_request_refresh()
+        self.hass.async_create_task(self._delayed_refresh())

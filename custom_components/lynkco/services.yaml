@@ -4,8 +4,7 @@ refresh:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -15,8 +14,7 @@ flash_lights:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -26,8 +24,7 @@ honk_horn:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -37,8 +34,7 @@ open_sunroof:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -48,8 +44,7 @@ close_sunroof:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -59,8 +54,7 @@ set_charge_limit:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
     percent:
@@ -80,8 +74,7 @@ start_ventilate:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -91,8 +84,7 @@ stop_ventilate:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -102,8 +94,7 @@ start_heaters:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -113,8 +104,7 @@ stop_heaters:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
 
@@ -124,8 +114,7 @@ start_conditioning:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:
     temp:
@@ -145,7 +134,26 @@ stop_conditioning:
   fields:
     vin:
       name: VIN
-      description: Vehicle Identification Number
-      required: true
+      description: Vehicle Identification Number (optional if only one vehicle)
+      selector:
+        text:
+
+lock_door:
+  name: Lock doors
+  description: Lock the vehicle's doors.
+  fields:
+    vin:
+      name: VIN
+      description: Vehicle Identification Number (optional if only one vehicle)
+      selector:
+        text:
+
+unlock_door:
+  name: Unlock doors
+  description: Unlock the vehicle's doors.
+  fields:
+    vin:
+      name: VIN
+      description: Vehicle Identification Number (optional if only one vehicle)
       selector:
         text:

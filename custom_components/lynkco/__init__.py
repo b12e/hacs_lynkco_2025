@@ -19,6 +19,7 @@ PLATFORMS = ["sensor", "binary_sensor", "device_tracker", "lock"]
 
 ATTR_VIN = "vin"
 ATTR_PERCENT = "percent"
+ATTR_TEMP = "temp"
 
 SERVICE_FLASH_LIGHTS = "flash_lights"
 SERVICE_HONK_HORN = "honk_horn"
@@ -32,21 +33,52 @@ SERVICE_STOP_HEATERS = "stop_heaters"
 SERVICE_START_CONDITIONING = "start_conditioning"
 SERVICE_STOP_CONDITIONING = "stop_conditioning"
 SERVICE_REFRESH = "refresh"
+SERVICE_LOCK_DOOR = "lock_door"
+SERVICE_UNLOCK_DOOR = "unlock_door"
 
-ATTR_TEMP = "temp"
+ALL_SERVICES = [
+    SERVICE_FLASH_LIGHTS, SERVICE_HONK_HORN,
+    SERVICE_OPEN_SUNROOF, SERVICE_CLOSE_SUNROOF,
+    SERVICE_SET_CHARGE_LIMIT,
+    SERVICE_START_VENTILATE, SERVICE_STOP_VENTILATE,
+    SERVICE_START_HEATERS, SERVICE_STOP_HEATERS,
+    SERVICE_START_CONDITIONING, SERVICE_STOP_CONDITIONING,
+    SERVICE_REFRESH,
+    SERVICE_LOCK_DOOR, SERVICE_UNLOCK_DOOR,
+]
 
-VIN_SCHEMA = vol.Schema({vol.Required(ATTR_VIN): cv.string})
+VIN_SCHEMA = vol.Schema({vol.Optional(ATTR_VIN): cv.string})
 CHARGE_LIMIT_SCHEMA = vol.Schema({
-    vol.Required(ATTR_VIN): cv.string,
+    vol.Optional(ATTR_VIN): cv.string,
     vol.Required(ATTR_PERCENT): vol.All(vol.Coerce(int), vol.Range(min=50, max=100)),
 })
 CONDITIONING_SCHEMA = vol.Schema({
-    vol.Required(ATTR_VIN): cv.string,
+    vol.Optional(ATTR_VIN): cv.string,
     vol.Required(ATTR_TEMP): vol.All(vol.Coerce(int), vol.Range(min=16, max=28)),
 })
 
-
 ACTION_REFRESH_DELAY = 15  # seconds to wait before refreshing after an action
+
+
+def _all_vins(hass: HomeAssistant) -> list[str]:
+    """Return all known VINs across all config entries."""
+    vins = []
+    for entry_data in hass.data.get(DOMAIN, {}).values():
+        vins.extend(entry_data.get("coordinators", {}).keys())
+    return vins
+
+
+def _resolve_vin(hass: HomeAssistant, call: ServiceCall) -> str:
+    """Get VIN from service call, or auto-detect if only one vehicle."""
+    vin = call.data.get(ATTR_VIN)
+    if vin:
+        return vin
+    vins = _all_vins(hass)
+    if len(vins) == 1:
+        return vins[0]
+    raise vol.Invalid(
+        f"Multiple vehicles configured ({', '.join(vins)}). Please specify 'vin'."
+    )
 
 
 def _get_api(hass: HomeAssistant, vin: str) -> LynkCoAPI:
@@ -112,67 +144,77 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register services (only once)
     if not hass.services.has_service(DOMAIN, SERVICE_FLASH_LIGHTS):
         async def handle_flash_lights(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).flash_lights(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_honk_horn(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).honk_horn(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_open_sunroof(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).open_sunroof(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_close_sunroof(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).close_sunroof(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_set_charge_limit(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).set_charge_limit(vin, call.data[ATTR_PERCENT])
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_start_ventilate(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).start_ventilate(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_stop_ventilate(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).stop_ventilate(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_start_heaters(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).start_heaters(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
         async def handle_stop_heaters(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).stop_heaters(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
+        async def handle_start_conditioning(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).start_conditioning(vin, call.data[ATTR_TEMP])
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
+        async def handle_stop_conditioning(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).stop_conditioning(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
+        async def handle_lock_door(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).lock_door(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
+        async def handle_unlock_door(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).unlock_door(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
         async def handle_refresh(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
+            vin = _resolve_vin(hass, call)
             coordinator = _get_coordinator(hass, vin)
             if coordinator:
                 await coordinator.async_request_refresh()
             else:
                 raise vol.Invalid(f"VIN {vin} not found")
-
-        async def handle_start_conditioning(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
-            await _get_api(hass, vin).start_conditioning(vin, call.data[ATTR_TEMP])
-            hass.async_create_task(_delayed_refresh(hass, vin))
-
-        async def handle_stop_conditioning(call: ServiceCall) -> None:
-            vin = call.data[ATTR_VIN]
-            await _get_api(hass, vin).stop_conditioning(vin)
-            hass.async_create_task(_delayed_refresh(hass, vin))
 
         hass.services.async_register(DOMAIN, SERVICE_FLASH_LIGHTS, handle_flash_lights, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_HONK_HORN, handle_honk_horn, VIN_SCHEMA)
@@ -183,9 +225,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.services.async_register(DOMAIN, SERVICE_STOP_VENTILATE, handle_stop_ventilate, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_START_HEATERS, handle_start_heaters, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_STOP_HEATERS, handle_stop_heaters, VIN_SCHEMA)
-        hass.services.async_register(DOMAIN, SERVICE_REFRESH, handle_refresh, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_START_CONDITIONING, handle_start_conditioning, CONDITIONING_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_STOP_CONDITIONING, handle_stop_conditioning, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_LOCK_DOOR, handle_lock_door, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_UNLOCK_DOOR, handle_unlock_door, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_REFRESH, handle_refresh, VIN_SCHEMA)
 
     return True
 
@@ -195,16 +239,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
-        # Remove services if no entries left
         if not hass.data.get(DOMAIN):
-            for service in [
-                SERVICE_FLASH_LIGHTS, SERVICE_HONK_HORN,
-                SERVICE_OPEN_SUNROOF, SERVICE_CLOSE_SUNROOF,
-                SERVICE_SET_CHARGE_LIMIT,
-                SERVICE_START_VENTILATE, SERVICE_STOP_VENTILATE,
-                SERVICE_START_HEATERS, SERVICE_STOP_HEATERS,
-                SERVICE_REFRESH,
-                SERVICE_START_CONDITIONING, SERVICE_STOP_CONDITIONING,
-            ]:
+            for service in ALL_SERVICES:
                 hass.services.async_remove(DOMAIN, service)
     return unload_ok

@@ -9,15 +9,41 @@ It was tested with the 2025 Lynk&Co 01.
 ## Features
 
 ### Sensors
-- **Battery**: level (%), range (km), charging status, charging speed (kW), time remaining, charge limit
-- **Fuel** (01/08 PHEV only): level (%), range (km), average consumption (L/100km), fuel type
-- **Climate**: interior temperature, target temperature, HVAC status
-- **Vehicle**: odometer, central lock status, address
+| Entity | Description | Unit |
+|---|---|---|
+| Battery level | State of charge | % |
+| Electric range | Remaining electric range | km |
+| Charging status | Current charging state (charging, fully_charged, etc.) | - |
+| Charging speed | Current charging power | kW |
+| Charging time remaining | Time until fully charged | min |
+| Charge limit | Configured charge limit | % |
+| Battery capacity | Total battery capacity | kWh |
+| Battery energy | Current energy in battery (capacity x SoC) | kWh |
+| Fuel level | Remaining fuel (PHEV only) | % |
+| Fuel range | Remaining fuel range (PHEV only) | km |
+| Average fuel consumption | Average fuel consumption (PHEV only) | L/100km |
+| Fuel type | Fuel type (PHEV only) | - |
+| Interior temperature | Current cabin temperature | °C |
+| Target temperature | HVAC target temperature | °C |
+| Climate status | HVAC state | - |
+| Central lock | Lock state (locked/unlocked) | - |
+| Address | Last known address | - |
+| Odometer | Total distance driven | km |
 
 ### Binary Sensors
-- 4 doors (front/rear left/right)
-- 4 windows (front/rear left/right)
-- Sunroof, hood, trunk
+| Entity | Device class |
+|---|---|
+| Front left door | door |
+| Front right door | door |
+| Rear left door | door |
+| Rear right door | door |
+| Front left window | window |
+| Front right window | window |
+| Rear left window | window |
+| Rear right window | window |
+| Sunroof | window |
+| Hood | door |
+| Trunk | door |
 
 ### Device Tracker
 - GPS location with coordinates
@@ -26,23 +52,27 @@ It was tested with the 2025 Lynk&Co 01.
 - Door lock / unlock
 
 ### Actions (Services)
-Actions are available in v0.2.0 and above.
-| Service | Description | Required parameters | Confirmed working*
-|---|---|---|---|
-| `lynkco.refresh` | Force-refresh all sensors now | none | ✅ 
-| `lynkco.flash_lights` | Flash the vehicle's lights | `vin` | ✅ 
-| `lynkco.honk_horn` | Honk the horn | `vin` | t.b.c.
-| `lynkco.open_sunroof` | Open the sunroof | `vin` | ✅
-| `lynkco.close_sunroof` | Close the sunroof | `vin` | ✅
-| `lynkco.set_charge_limit` | Set charge limit | `vin`, <br> `percent` (between 50 and 100) | t.b.c.
-| `lynkco.start_conditioning` | Start air conditioning | `vin`<br /> `temp` (number between 16 and 28) | t.b.c.
-| `lynkco.stop_conditioning` | Stop air conditioning | `vin` | t.b.c.
-| `lynkco.start_ventilate` | Start ventilation | `vin` | t.b.c.
-| `lynkco.stop_ventilate` | Stop ventilation | `vin` | t.b.c.
-| `lynkco.start_heaters` | Start seat/steering heaters | `vin` | t.b.c.
-| `lynkco.stop_heaters` | Stop heaters | `vin` | t.b.c.
 
-<sup><sub>\* Confirmed on a Lynk&Co 01, 2025 model</sup></sub>
+All services accept an optional `vin` parameter. When only one vehicle is configured, the VIN is auto-detected and can be omitted.
+
+| Service | Description | Parameters | Confirmed working* |
+|---|---|---|---|
+| `lynkco.refresh` | Force-refresh all sensors now | | ✅ |
+| `lynkco.lock_door` | Lock the vehicle's doors | | ✅ |
+| `lynkco.unlock_door` | Unlock the vehicle's doors | | ✅ |
+| `lynkco.flash_lights` | Flash the vehicle's lights | | ✅ |
+| `lynkco.honk_horn` | Honk the horn | | t.b.c. |
+| `lynkco.open_sunroof` | Open the sunroof | | ✅ |
+| `lynkco.close_sunroof` | Close the sunroof | | ✅ |
+| `lynkco.set_charge_limit` | Set charge limit | `percent` (50-100) | t.b.c. |
+| `lynkco.start_conditioning` | Start air conditioning | `temp` (16-28°C) | t.b.c. |
+| `lynkco.stop_conditioning` | Stop air conditioning | | t.b.c. |
+| `lynkco.start_ventilate` | Start ventilation | | t.b.c. |
+| `lynkco.stop_ventilate` | Stop ventilation | | t.b.c. |
+| `lynkco.start_heaters` | Start seat/steering heaters | | t.b.c. |
+| `lynkco.stop_heaters` | Stop heaters | | t.b.c. |
+
+<sup><sub>* Confirmed on a Lynk&Co 01, 2025 model</sub></sup>
 
 ### Screenshot
 

@@ -93,7 +93,7 @@ Copy `custom_components/lynkco/` to your Home Assistant `custom_components` dire
 The integration uses Azure AD B2C authentication with MFA. Setup requires a one-time browser login:
 
 1. Add the integration in Home Assistant
-2. A login URL is generated — open it in your browser
+2. A login URL is generated - open it in your browser
 3. Log in with your Lynk & Co email + password + SMS MFA code
 4. After MFA, the browser will fail to open `msauth://...`
 5. Open DevTools (F12) → Network tab → find the last request → copy the `Location` header value (note: Firefox dev tools don't show the entire header. Right click on the request and copy the response headers instead, and then get the `msauth://` header from there)
@@ -114,10 +114,12 @@ Data is also refreshed by default after any other action is called.
 Tested with the 2025 platform used by:
 - Lynk & Co 01 (PHEV) - confirmed working
 - Lynk & Co 02 (BEV) - not tested
-- Lynk & Co 08 - not tested
+- Lynk & Co 08 (PHEV) - not tested
 
 > **Note**: Pre-2025 Lynk & Co 01 models use a different platform and are NOT supported. You can try your luck with [this](https://github.com/Donkie/Hass-Lynk-Co) repo. 
 
 ## Credits
 
 API reverse-engineered from the Lynk & Co Android app v2.55.0.
+
+This HACS plugin is not endorsed by Lynk&Co and I have no affiliation with them whatsoever.

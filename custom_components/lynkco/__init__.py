@@ -46,7 +46,7 @@ CONDITIONING_SCHEMA = vol.Schema({
 })
 
 
-ACTION_REFRESH_DELAY = 5  # seconds to wait before refreshing after an action
+ACTION_REFRESH_DELAY = 15  # seconds to wait before refreshing after an action
 
 
 def _get_api(hass: HomeAssistant, vin: str) -> LynkCoAPI:

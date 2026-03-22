@@ -58,7 +58,7 @@ class LynkCoLock(CoordinatorEntity, LockEntity):
         return status == "LOCKED"
 
     async def _delayed_refresh(self) -> None:
-        await asyncio.sleep(5)
+        await asyncio.sleep(15)
         await self.coordinator.async_request_refresh()
 
     async def async_lock(self, **kwargs) -> None:

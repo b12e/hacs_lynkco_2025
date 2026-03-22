@@ -53,7 +53,7 @@ It was tested with the 2025 Lynk&Co 01.
 
 ### Actions (Services)
 
-All services accept an optional `vin` parameter. When only one vehicle is configured, the VIN is auto-detected and can be omitted.
+All services (except `lynkco.refresh`) accept an optional `vin` parameter. When only one vehicle is configured, the VIN is auto-detected and can be omitted.
 
 | Service | Description | Parameters | Confirmed working* |
 |---|---|---|---|

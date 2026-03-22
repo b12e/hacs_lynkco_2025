@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "custom_components/lynkco/**/*.py"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current version from manifest
+        id: current
+        run: |
+          version=$(jq -r .version custom_components/lynkco/manifest.json)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Bump patch version
+        id: bump
+        run: |
+          IFS='.' read -r major minor patch <<< "${{ steps.current.outputs.version }}"
+          new_version="${major}.${minor}.$((patch + 1))"
+          echo "version=$new_version" >> "$GITHUB_OUTPUT"
+
+      - name: Update manifest.json
+        run: |
+          jq --arg v "${{ steps.bump.outputs.version }}" '.version = $v' \
+            custom_components/lynkco/manifest.json > manifest.tmp \
+            && mv manifest.tmp custom_components/lynkco/manifest.json
+
+      - name: Build changelog from commits since last tag
+        id: changelog
+        run: |
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$last_tag" ]; then
+            log=$(git log --pretty=format:"- %s (%h)" -- "custom_components/lynkco/**/*.py")
+          else
+            log=$(git log "${last_tag}..HEAD" --pretty=format:"- %s (%h)" -- "custom_components/lynkco/**/*.py")
+          fi
+          if [ -z "$log" ]; then
+            log="- Minor changes"
+          fi
+          echo "log<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$log" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add custom_components/lynkco/manifest.json
+          git commit -m "Bump version to ${{ steps.bump.outputs.version }}"
+          git push
+
+      - name: Create tag and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="v${{ steps.bump.outputs.version }}"
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes "${{ steps.changelog.outputs.log }}" \
+            --target main

@@ -50,7 +50,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": SensorDeviceClass.POWER,
         "unit": UnitOfPower.KILO_WATT,
         "state_class": SensorStateClass.MEASUREMENT,
-        "value_fn": lambda d: d.get("charge", {}).get("batteryState", {}).get("chargingSpeed", {}).get("kW"),
+        "value_fn": lambda d: (d.get("charge", {}).get("batteryState", {}).get("chargingSpeed") or {}).get("kW"),
     },
     {
         "key": "charging_time_remaining",
@@ -68,7 +68,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": None,
         "unit": PERCENTAGE,
         "state_class": SensorStateClass.MEASUREMENT,
-        "value_fn": lambda d: d.get("charge", {}).get("batteryState", {}).get("chargeLimit", {}).get("value"),
+        "value_fn": lambda d: (d.get("charge", {}).get("batteryState", {}).get("chargeLimit") or {}).get("value"),
     },
     {
         "key": "interior_temperature",
@@ -113,7 +113,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": None,
         "unit": None,
         "state_class": None,
-        "value_fn": lambda d: d.get("location", {}).get("vehicleLocation", {}).get("longAddress"),
+        "value_fn": lambda d: (d.get("location", {}).get("vehicleLocation") or {}).get("longAddress"),
     },
     {
         "key": "fuel_level",

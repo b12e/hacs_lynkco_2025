@@ -2,9 +2,9 @@
 
 Custom [Home Assistant](https://www.home-assistant.io/) integration for 2025 Lynk & Co vehicles (01, 02, 08) via [HACS](https://hacs.xyz/).
 
-This HACS plugin was entirely reverse engineered and vibe-coded. It should work for the European Lynk&Co vehicles on the new platform (facelift 01, 02, 08).
+This HACS plugin was vibe-coded by decompiling the Lynk&Co Android app and letting Claude Code have a run at the code to figure out endpoints and authentication. Claude then wrote the python - although I'm not a stranger to python, it was just easier this way :) 
 
-It was tested with the 2025 Lynk&Co 01.
+It should work for the European Lynk&Co vehicles on the new platform (facelift 01, 02, 08). I've tested myself with the 2025 Lynk&Co 01.
 
 ## Features
 

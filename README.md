@@ -66,7 +66,7 @@ Tested with the 2025 platform used by:
 - Lynk & Co 02 (BEV) - not tested
 - Lynk & Co 08 - not tested
 
-> **Note**: Pre-2025 Lynk & Co 01 models use a different platform and are NOT supported.
+> **Note**: Pre-2025 Lynk & Co 01 models use a different platform and are NOT supported. You can try your luck with [this](https://github.com/Donkie/Hass-Lynk-Co) repo. 
 
 ## Credits
 

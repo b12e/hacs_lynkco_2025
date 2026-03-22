@@ -6,7 +6,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, UnitOfLength, UnitOfPower, UnitOfTemperature, UnitOfTime
+from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfLength, UnitOfPower, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -160,6 +160,24 @@ SENSOR_TYPES: list[dict] = [
         "state_class": SensorStateClass.TOTAL_INCREASING,
         "value_fn": lambda d: d.get("metadata", {}).get("vehicle", {}).get("odometer"),
     },
+    {
+        "key": "battery_capacity",
+        "name": "Battery capacity",
+        "icon": "mdi:battery-high",
+        "device_class": SensorDeviceClass.ENERGY,
+        "unit": UnitOfEnergy.KILO_WATT_HOUR,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "value_fn": lambda d: _round(d.get("metadata", {}).get("batteryInfo", {}).get("batteryCapacity")),
+    },
+    {
+        "key": "battery_energy",
+        "name": "Battery energy",
+        "icon": "mdi:battery-charging",
+        "device_class": SensorDeviceClass.ENERGY,
+        "unit": UnitOfEnergy.KILO_WATT_HOUR,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "value_fn": lambda d: _battery_kwh(d),
+    },
 ]
 
 
@@ -168,9 +186,21 @@ def _pct(val):
         return round(val * 100, 1)
     return None
 
+def _round(val):
+    if val is not None:
+        return round(val, 1)
+    return None
+
 def _lower(val):
     if val is not None:
         return str(val).lower()
+    return None
+
+def _battery_kwh(d):
+    capacity = d.get("metadata", {}).get("batteryInfo", {}).get("batteryCapacity")
+    soc = d.get("charge", {}).get("batteryState", {}).get("stateOfCharge")
+    if capacity is not None and soc is not None:
+        return round(capacity * soc, 1)
     return None
 
 

@@ -26,21 +26,21 @@ It was tested with the 2025 Lynk&Co 01.
 - Door lock / unlock
 
 ### Actions (Services)
-Actions are available in v0.2.0 and above. As of right now, they are untested. 
+Actions are available in v0.2.0 and above.
 | Service | Description | Required parameters | Confirmed working*
 |---|---|---|---|
 | `lynkco.refresh` | Force-refresh all sensors now | none | ✅ 
 | `lynkco.flash_lights` | Flash the vehicle's lights | `vin` | ✅ 
-| `lynkco.honk_horn` | Honk the horn | `vin`
+| `lynkco.honk_horn` | Honk the horn | `vin` | t.b.c.
 | `lynkco.open_sunroof` | Open the sunroof | `vin` | ✅
 | `lynkco.close_sunroof` | Close the sunroof | `vin` | ✅
-| `lynkco.set_charge_limit` | Set charge limit | `vin`, <br> `percent` (between 50 and 100) |
-| `lynkco.start_conditioning` | Start air conditioning | `vin`<br /> `temp` (number between 16 and 28) |
-| `lynkco.stop_conditioning` | Stop air conditioning | `vin` |
-| `lynkco.start_ventilate` | Start ventilation | `vin` |
-| `lynkco.stop_ventilate` | Stop ventilation | `vin` |
-| `lynkco.start_heaters` | Start seat/steering heaters | `vin` |
-| `lynkco.stop_heaters` | Stop heaters | `vin` |
+| `lynkco.set_charge_limit` | Set charge limit | `vin`, <br> `percent` (between 50 and 100) | t.b.c.
+| `lynkco.start_conditioning` | Start air conditioning | `vin`<br /> `temp` (number between 16 and 28) | t.b.c.
+| `lynkco.stop_conditioning` | Stop air conditioning | `vin` | t.b.c.
+| `lynkco.start_ventilate` | Start ventilation | `vin` | t.b.c.
+| `lynkco.stop_ventilate` | Stop ventilation | `vin` | t.b.c.
+| `lynkco.start_heaters` | Start seat/steering heaters | `vin` | t.b.c.
+| `lynkco.stop_heaters` | Stop heaters | `vin` | t.b.c.
 
 <sup><sub>\* Confirmed on a Lynk&Co 01, 2025 model</sup></sub>
 

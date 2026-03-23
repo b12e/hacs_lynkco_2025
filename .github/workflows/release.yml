@@ -6,21 +6,20 @@ on:
     paths:
       - "custom_components/lynkco/**/*.py"
   workflow_dispatch:
-    
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    # Skip if this push is the version bump PR merge
     if: "!startsWith(github.event.head_commit.message, 'Bump version to')"
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: main
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Get current version from manifest
         id: current
@@ -34,6 +33,12 @@ jobs:
           IFS='.' read -r major minor patch <<< "${{ steps.current.outputs.version }}"
           new_version="${major}.${minor}.$((patch + 1))"
           echo "version=$new_version" >> "$GITHUB_OUTPUT"
+
+      - name: Update manifest.json
+        run: |
+          jq --arg v "${{ steps.bump.outputs.version }}" '.version = $v' \
+            custom_components/lynkco/manifest.json > manifest.tmp \
+            && mv manifest.tmp custom_components/lynkco/manifest.json
 
       - name: Build changelog from commits since last tag
         id: changelog
@@ -51,52 +56,19 @@ jobs:
           echo "$log" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
-      - name: Create version bump branch and PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit version bump and push
         run: |
-          version="${{ steps.bump.outputs.version }}"
-          branch="release/v${version}"
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git checkout -b "$branch"
-
-          jq --arg v "$version" '.version = $v' \
-            custom_components/lynkco/manifest.json > manifest.tmp \
-            && mv manifest.tmp custom_components/lynkco/manifest.json
-
           git add custom_components/lynkco/manifest.json
-          git commit -m "Bump version to ${version}"
-          git push origin "$branch"
+          git commit -m "Bump version to ${{ steps.bump.outputs.version }}"
+          git push origin main
 
-          pr_url=$(gh pr create \
-            --title "Bump version to ${version}" \
-            --body "Automated version bump to ${version}" \
-            --base main \
-            --head "$branch")
-
-          gh pr merge "$pr_url" --squash --auto
-
-      - name: Wait for PR merge and create release
+      - name: Create tag and release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          version="${{ steps.bump.outputs.version }}"
-          tag="v${version}"
-
-          # Wait for the PR to merge (up to 60s)
-          for i in $(seq 1 12); do
-            sleep 5
-            state=$(gh pr list --head "release/v${version}" --state merged --json number --jq 'length')
-            if [ "$state" -gt 0 ]; then
-              break
-            fi
-          done
-
-          # Fetch the merged main
-          git fetch origin main
+          tag="v${{ steps.bump.outputs.version }}"
           gh release create "$tag" \
             --title "$tag" \
             --notes "${{ steps.changelog.outputs.log }}" \

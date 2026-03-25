@@ -1,0 +1,99 @@
+refresh:
+  fields:
+    vin:
+      selector:
+        text:
+
+flash_lights:
+  fields:
+    vin:
+      selector:
+        text:
+
+honk_horn:
+  fields:
+    vin:
+      selector:
+        text:
+
+open_sunroof:
+  fields:
+    vin:
+      selector:
+        text:
+
+close_sunroof:
+  fields:
+    vin:
+      selector:
+        text:
+
+set_charge_limit:
+  fields:
+    vin:
+      selector:
+        text:
+    percent:
+      required: true
+      selector:
+        number:
+          min: 50
+          max: 100
+          step: 5
+          unit_of_measurement: "%"
+
+start_ventilate:
+  fields:
+    vin:
+      selector:
+        text:
+
+stop_ventilate:
+  fields:
+    vin:
+      selector:
+        text:
+
+start_heaters:
+  fields:
+    vin:
+      selector:
+        text:
+
+stop_heaters:
+  fields:
+    vin:
+      selector:
+        text:
+
+start_conditioning:
+  fields:
+    vin:
+      selector:
+        text:
+    temp:
+      required: true
+      selector:
+        number:
+          min: 16
+          max: 28
+          step: 1
+          unit_of_measurement: "°C"
+
+stop_conditioning:
+  fields:
+    vin:
+      selector:
+        text:
+
+lock_door:
+  fields:
+    vin:
+      selector:
+        text:
+
+unlock_door:
+  fields:
+    vin:
+      selector:
+        text:

@@ -21,7 +21,7 @@ BINARY_SENSOR_TYPES: list[dict] = [
     {"key": "window_front_right", "name": "Front right window", "field": "windowFrontRightStatus", "device_class": BinarySensorDeviceClass.WINDOW},
     {"key": "window_rear_left", "name": "Rear left window", "field": "windowRearLeftStatus", "device_class": BinarySensorDeviceClass.WINDOW},
     {"key": "window_rear_right", "name": "Rear right window", "field": "windowRearRightStatus", "device_class": BinarySensorDeviceClass.WINDOW},
-    {"key": "sunroof", "name": "Sunroof", "field": "sunroofStatus", "device_class": BinarySensorDeviceClass.WINDOW},
+    {"key": "sunroof", "name": "Sunroof", "field": "sunroofStatus", "device_class": BinarySensorDeviceClass.WINDOW, "exclude_models": ["E335"]},
     {"key": "hood", "name": "Hood", "field": "hoodStatus", "device_class": BinarySensorDeviceClass.DOOR},
     {"key": "trunk", "name": "Trunk", "field": "trunkStatus", "device_class": BinarySensorDeviceClass.DOOR},
 ]
@@ -34,6 +34,8 @@ async def async_setup_entry(
     entities = []
     for vin, coordinator in data["coordinators"].items():
         for sensor_type in BINARY_SENSOR_TYPES:
+            if coordinator.model in sensor_type.get("exclude_models", []):
+                continue
             entities.append(LynkCoBinarySensor(coordinator, sensor_type))
     async_add_entities(entities)
 

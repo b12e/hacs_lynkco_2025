@@ -4,48 +4,48 @@ Custom [Home Assistant](https://www.home-assistant.io/) integration for 2025 Lyn
 
 This HACS plugin was vibe-coded by decompiling the Lynk&Co Android app and letting Claude Code have a run at the code to figure out endpoints and authentication. Claude then wrote the python - although I'm not a stranger to python, it was just easier this way :) 
 
-It works for the European Lynk&Co vehicles on the new platform (facelift 01, 02 and probably the 08). I've tested myself with the 2025 Lynk&Co 01 and have had confirmation it works for the Lynk&Co 02 BEV.
+It works for the European Lynk&Co vehicles on the new platform (2025 and newer). I've tested myself with the 2025 Lynk&Co 01 and have had confirmation it works for the Lynk&Co 02 BEV and Lynk&Co 08 PHEV.
 
 Pull Requests are disabled until further notice.
 
 ## Features
 
 ### Sensors
-| Entity | Description | Unit |
-|---|---|---|
-| Battery level | State of charge | % |
-| Electric range | Remaining electric range | km |
-| Charging status | Current charging state (charging, fully_charged, etc.) | - |
-| Charging speed | Current charging power | kW |
-| Charging time remaining | Time until fully charged | min |
-| Charge limit | Configured charge limit | % |
-| Battery capacity | Total battery capacity | kWh |
-| Battery energy | Current energy in battery (capacity x SoC) | kWh |
-| Fuel level | Remaining fuel (PHEV only) | % |
-| Fuel range | Remaining fuel range (PHEV only) | km |
-| Average fuel consumption | Average fuel consumption (PHEV only) | L/100km |
-| Fuel type | Fuel type (PHEV only) | - |
-| Interior temperature | Current cabin temperature | °C |
-| Target temperature | HVAC target temperature | °C |
-| Climate status | HVAC state | - |
-| Central lock | Lock state (locked/unlocked) | - |
-| Address | Last known address | - |
-| Odometer | Total distance driven | km |
+| Entity | Description | Unit | Model Availability
+|---|---|---|---|
+| Battery level | State of charge | % | All
+| Electric range | Remaining electric range | km | All
+| Charging status | Current charging state (charging, fully_charged, etc.) | - | All
+| Charging speed | Current charging power | kW | All
+| Charging time remaining | Time until fully charged | min | All
+| Charge limit | Configured charge limit | % | All
+| Battery capacity | Total battery capacity | kWh | All
+| Battery energy | Current energy in battery (capacity x SoC) | kWh | All
+| Fuel level | Remaining fuel | % | 01 / 08
+| Fuel range | Remaining fuel range | km | 01 / 08
+| Average fuel consumption | Average fuel consumption | L/100km | 01 / 08
+| Fuel type | Fuel type | - | 01 / 08
+| Interior temperature | Current cabin temperature | °C | All
+| Target temperature | HVAC target temperature | °C | All
+| Climate status | HVAC state | - | All
+| Central lock | Lock state (locked/unlocked) | - | All
+| Address | Last known address | - | All
+| Odometer | Total distance driven | km | All 
 
 ### Binary Sensors
-| Entity | Device class |
-|---|---|
-| Front left door | door |
-| Front right door | door |
-| Rear left door | door |
-| Rear right door | door |
-| Front left window | window |
-| Front right window | window |
-| Rear left window | window |
-| Rear right window | window |
-| Sunroof | window |
-| Hood | door |
-| Trunk | door |
+| Entity | Device class | Model Availability
+|---|---|--|
+| Front left door | door | All
+| Front right door | door | All
+| Rear left door | door | All
+| Rear right door | door | All
+| Front left window | window | All
+| Front right window | window | All
+| Rear left window | window | All
+| Rear right window | window | All
+| Sunroof | window | 01 / 08
+| Hood | door | All
+| Trunk | door | All
 
 ### Device Tracker
 - GPS location with coordinates
@@ -58,9 +58,9 @@ Pull Requests are disabled until further notice.
 All services (except `lynkco.refresh`) accept an optional `vin` parameter. When only one vehicle is configured, the VIN is auto-detected and can be omitted.
 | Service | Description | Parameters | 01 (facelift) | 02 | 08 |
 |---|---|---|---|---|---|
-| `lynkco.refresh` | Force-refresh all sensors now | | ✅ | ✅ | |
-| `lynkco.lock_door` | Lock the vehicle's doors | | ✅ | ✅ | |
-| `lynkco.unlock_door` | Unlock the vehicle's doors | | ✅ | ✅ | |
+| `lynkco.refresh` | Force-refresh all sensors now | | ✅ | ✅ | ✅ |
+| `lynkco.lock_door` | Lock the vehicle's doors | | ✅ | ✅ | | ✅
+| `lynkco.unlock_door` | Unlock the vehicle's doors | | ✅ | ✅ | ✅ |
 | `lynkco.flash_lights` | Flash the vehicle's lights | | ✅ | ✅ | |
 | `lynkco.honk_horn` | Honk the horn | | t.b.c. | ✅ | |
 | `lynkco.open_sunroof` | Open the sunroof | | ✅ | ❌ |
@@ -118,10 +118,12 @@ Data is also refreshed by default after any other action is called.
 
 ## Supported Models
 
-Tested with the 2025 platform used by:
-- Lynk & Co 01 (PHEV) - confirmed working
-- Lynk & Co 02 (BEV) - confirmed working
-- Lynk & Co 08 (PHEV) - not tested
+Tested on the following vehicles:
+- 2025 (New) Lynk & Co 01 (PHEV)
+- 2025 Lynk & Co 02 (BEV)
+- 2025 Lynk & Co 08 (PHEV)
+
+Other models are currently not available on the EU market, although it is likely when they do become available they are on the same platform and will work. The documentation will be updated accordingly as soon as this happens.
 
 > **Note**: Pre-2025 Lynk & Co 01 models use a different platform and are NOT supported. You can try your luck with [this](https://github.com/Donkie/Hass-Lynk-Co) repo. 
 

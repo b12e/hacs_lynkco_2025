@@ -164,7 +164,7 @@
         },
         "heaters": {
           "name": "Heizungen",
-          "description": "Welche Heizungen aktivieren"
+          "description": "Zu aktivierende Heizungen"
         }
       }
     },
@@ -178,7 +178,7 @@
         },
         "heaters": {
           "name": "Heizungen",
-          "description": "Welche Heizungen deaktivieren"
+          "description": "Zu deaktivierende Heizungen"
         }
       }
     },

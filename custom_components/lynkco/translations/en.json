@@ -164,7 +164,7 @@
         },
         "heaters": {
           "name": "Heaters",
-          "description": "Which heaters to activate"
+          "description": "Heaters to activate"
         }
       }
     },
@@ -178,7 +178,7 @@
         },
         "heaters": {
           "name": "Heaters",
-          "description": "Which heaters to deactivate"
+          "description": "Heaters to deactivate"
         }
       }
     },

@@ -164,7 +164,7 @@
         },
         "heaters": {
           "name": "Calefactores",
-          "description": "Qué calefactores activar"
+          "description": "Calefactores a activar"
         }
       }
     },
@@ -178,7 +178,7 @@
         },
         "heaters": {
           "name": "Calefactores",
-          "description": "Qué calefactores desactivar"
+          "description": "Calefactores a desactivar"
         }
       }
     },

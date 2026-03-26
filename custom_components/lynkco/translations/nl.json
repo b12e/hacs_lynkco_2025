@@ -164,7 +164,7 @@
         },
         "heaters": {
           "name": "Verwarmingen",
-          "description": "Welke verwarmingen activeren"
+          "description": "Te activeren verwarmingen"
         }
       }
     },
@@ -178,7 +178,7 @@
         },
         "heaters": {
           "name": "Verwarmingen",
-          "description": "Welke verwarmingen deactiveren"
+          "description": "Te deactiveren verwarmingen"
         }
       }
     },

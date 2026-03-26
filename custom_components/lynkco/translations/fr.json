@@ -164,7 +164,7 @@
         },
         "heaters": {
           "name": "Chauffages",
-          "description": "Quels chauffages activer"
+          "description": "Chauffages à activer"
         }
       }
     },
@@ -178,7 +178,7 @@
         },
         "heaters": {
           "name": "Chauffages",
-          "description": "Quels chauffages désactiver"
+          "description": "Chauffages à désactiver"
         }
       }
     },

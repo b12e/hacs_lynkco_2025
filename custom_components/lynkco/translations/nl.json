@@ -240,6 +240,30 @@
           "description": "Voertuigidentificatienummer (optioneel bij slechts 1 geconfigureerd voertuig)"
         }
       }
+    },
+    "lock_glovebox": {
+      "name": "Handschoenenvak vergrendelen",
+      "description": "Vergrendel het handschoenenvak met een pincode.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Voertuigidentificatienummer (optioneel bij slechts 1 geconfigureerd voertuig)"
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "4-cijferige pincode"
+        }
+      }
+    },
+    "unlock_glovebox": {
+      "name": "Handschoenenvak ontgrendelen",
+      "description": "Ontgrendel het handschoenenvak.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Voertuigidentificatienummer (optioneel bij slechts 1 geconfigureerd voertuig)"
+        }
+      }
     }
   }
 }

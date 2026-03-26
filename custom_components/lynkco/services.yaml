@@ -102,6 +102,22 @@ stop_heaters:
             - value: "defrost"
               label: "Windshield defrost"
 
+lock_glovebox:
+  fields:
+    vin:
+      selector:
+        text:
+    pin:
+      required: true
+      selector:
+        text:
+
+unlock_glovebox:
+  fields:
+    vin:
+      selector:
+        text:
+
 start_conditioning:
   fields:
     vin:

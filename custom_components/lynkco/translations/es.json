@@ -240,6 +240,30 @@
           "description": "Número de identificación del vehículo (opcional si solo hay un vehículo)"
         }
       }
+    },
+    "lock_glovebox": {
+      "name": "Bloquear guantera",
+      "description": "Bloquear la guantera con un código PIN.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Número de identificación del vehículo (opcional si solo hay un vehículo)"
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "Código PIN de 4 dígitos"
+        }
+      }
+    },
+    "unlock_glovebox": {
+      "name": "Desbloquear guantera",
+      "description": "Desbloquear la guantera.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Número de identificación del vehículo (opcional si solo hay un vehículo)"
+        }
+      }
     }
   }
 }

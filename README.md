@@ -119,11 +119,14 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 | `lynkco.stop_ventilate` | Stop ventilation | | t.b.c. | ✅ |  t.b.c.
 | `lynkco.start_heaters` | Start heaters | `heaters` (list) | ✅ |  t.b.c.| t.b.c. |
 | `lynkco.stop_heaters` | Stop heaters | `heaters` (list) | ✅ | t.b.c. | t.b.c. |
+| `lynkco.lock_glovebox` | Lock the glovebox | `pin` (4 digits) | ✅ | t.b.c. | t.b.c. |
+| `lynkco.unlock_glovebox` | Unlock the glovebox | | ✅ | t.b.c. | t.b.c. |
 
 #### Notes:
 - ✅ = confirmed working on that model<br />
 - Sunroof actions aren't available on the Lynk&Co 02 as it doesn't have a sunroof that can open.<br />
 - A lot of the actions are only available when the doors are locked and the key is not in the vehicle.
+- The gloveblox locking/unlocking appears to be only possible while the vehicle is unlocked (needs confirmation). From basic testing, it appears the vehicle locks itself when the glovebox is unlocked remotely and the key isn't in the car (needs confirmation)
 - `temp` is in ºC.
 - `heaters` accepts a list of zones (see table below)
 

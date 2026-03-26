@@ -77,7 +77,8 @@
       "car_running": { "name": "Car running" }
     },
     "lock": {
-      "door_lock": { "name": "Door lock" }
+      "door_lock": { "name": "Door lock" },
+      "glovebox_lock": { "name": "Glovebox" }
     },
     "device_tracker": {
       "location": { "name": "Location" }
@@ -233,6 +234,30 @@
     "unlock_door": {
       "name": "Unlock doors",
       "description": "Unlock the vehicle's doors.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Vehicle Identification Number (optional if only one vehicle)"
+        }
+      }
+    },
+    "lock_glovebox": {
+      "name": "Lock glovebox",
+      "description": "Lock the vehicle's glovebox with a PIN code.",
+      "fields": {
+        "vin": {
+          "name": "VIN",
+          "description": "Vehicle Identification Number (optional if only one vehicle)"
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "4-digit PIN code"
+        }
+      }
+    },
+    "unlock_glovebox": {
+      "name": "Unlock glovebox",
+      "description": "Unlock the vehicle's glovebox.",
       "fields": {
         "vin": {
           "name": "VIN",

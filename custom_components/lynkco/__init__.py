@@ -21,6 +21,7 @@ ATTR_VIN = "vin"
 ATTR_PERCENT = "percent"
 ATTR_TEMP = "temp"
 ATTR_HEATERS = "heaters"
+ATTR_PIN = "pin"
 
 VALID_HEATERS = [
     "front_left_seat",
@@ -51,6 +52,8 @@ SERVICE_STOP_CONDITIONING = "stop_conditioning"
 SERVICE_REFRESH = "refresh"
 SERVICE_LOCK_DOOR = "lock_door"
 SERVICE_UNLOCK_DOOR = "unlock_door"
+SERVICE_LOCK_GLOVEBOX = "lock_glovebox"
+SERVICE_UNLOCK_GLOVEBOX = "unlock_glovebox"
 
 ALL_SERVICES = [
     SERVICE_FLASH_LIGHTS, SERVICE_HONK_HORN,
@@ -61,6 +64,7 @@ ALL_SERVICES = [
     SERVICE_START_CONDITIONING, SERVICE_STOP_CONDITIONING,
     SERVICE_REFRESH,
     SERVICE_LOCK_DOOR, SERVICE_UNLOCK_DOOR,
+    SERVICE_LOCK_GLOVEBOX, SERVICE_UNLOCK_GLOVEBOX,
 ]
 
 VIN_SCHEMA = vol.Schema({vol.Optional(ATTR_VIN): cv.string})
@@ -79,7 +83,12 @@ HEATERS_SCHEMA = vol.Schema({
     ),
 })
 
-ACTION_REFRESH_DELAY = 15  # seconds to wait before refreshing after an action
+GLOVEBOX_LOCK_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_VIN): cv.string,
+    vol.Required(ATTR_PIN): vol.All(cv.string, vol.Match(r"^\d{4}$")),
+})
+
+ACTION_REFRESH_DELAY = 10  # seconds to wait before refreshing after an action
 
 
 def _all_vins(hass: HomeAssistant) -> list[str]:
@@ -250,6 +259,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             await _get_api(hass, vin).unlock_door(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
+        async def handle_lock_glovebox(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).lock_glovebox(vin, call.data[ATTR_PIN])
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
+        async def handle_unlock_glovebox(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).unlock_glovebox(vin)
+            hass.async_create_task(_delayed_refresh(hass, vin))
+
         async def handle_refresh(call: ServiceCall) -> None:
             vin = _resolve_vin(hass, call)
             coordinator = _get_coordinator(hass, vin)
@@ -271,6 +290,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.services.async_register(DOMAIN, SERVICE_STOP_CONDITIONING, handle_stop_conditioning, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_LOCK_DOOR, handle_lock_door, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_UNLOCK_DOOR, handle_unlock_door, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_LOCK_GLOVEBOX, handle_lock_glovebox, GLOVEBOX_LOCK_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_UNLOCK_GLOVEBOX, handle_unlock_glovebox, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_REFRESH, handle_refresh, VIN_SCHEMA)
 
     return True

@@ -77,7 +77,8 @@
       "car_running": { "name": "Auto aktiv" }
     },
     "lock": {
-      "door_lock": { "name": "Türschloss" }
+      "door_lock": { "name": "Türschloss" },
+      "glovebox_lock": { "name": "Handschuhfach" }
     },
     "device_tracker": {
       "location": { "name": "Standort" }
@@ -233,6 +234,30 @@
     "unlock_door": {
       "name": "Türen entriegeln",
       "description": "Die Türen des Fahrzeugs entriegeln.",
+      "fields": {
+        "vin": {
+          "name": "FIN",
+          "description": "Fahrzeug-Identifizierungsnummer (optional bei nur einem Fahrzeug)"
+        }
+      }
+    },
+    "lock_glovebox": {
+      "name": "Handschuhfach verriegeln",
+      "description": "Das Handschuhfach mit einem PIN-Code verriegeln.",
+      "fields": {
+        "vin": {
+          "name": "FIN",
+          "description": "Fahrzeug-Identifizierungsnummer (optional bei nur einem Fahrzeug)"
+        },
+        "pin": {
+          "name": "PIN",
+          "description": "4-stelliger PIN-Code"
+        }
+      }
+    },
+    "unlock_glovebox": {
+      "name": "Handschuhfach entriegeln",
+      "description": "Das Handschuhfach entriegeln.",
       "fields": {
         "vin": {
           "name": "FIN",

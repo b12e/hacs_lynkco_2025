@@ -19,7 +19,7 @@ Other models are currently not available on the EU market, although it is likely
 
 Vehicle data is polled every 15 minutes by default. If you want to poll more frequently, you can do so using Home Assistant automations by calling the update action, although I don't recommend to update more often clock-round.
 
-Data is also refreshed by default 15 seconds after any action is called.
+Data is also refreshed by default 10 seconds after any action is called.
 
 ## ⚠️ Limitations
 
@@ -97,6 +97,7 @@ Data is also refreshed by default 15 seconds after any action is called.
 
 ### Lock
 - Door lock / unlock
+- Glovebox lock (requires PIN) / unlock
 
 ### Actions (Services)
 
@@ -118,11 +119,14 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 | `lynkco.stop_ventilate` | Stop ventilation | | t.b.c. | ✅ |  t.b.c.
 | `lynkco.start_heaters` | Start heaters | `heaters` (list) | ✅ |  t.b.c.| t.b.c. |
 | `lynkco.stop_heaters` | Stop heaters | `heaters` (list) | ✅ | t.b.c. | t.b.c. |
+| `lynkco.lock_glovebox` | Lock the glovebox | `pin` (4 digits) | ✅ | t.b.c. | t.b.c. |
+| `lynkco.unlock_glovebox` | Unlock the glovebox | | ✅ | t.b.c. | t.b.c. |
 
 #### Notes:
 - ✅ = confirmed working on that model<br />
 - Sunroof actions aren't available on the Lynk&Co 02 as it doesn't have a sunroof that can open.<br />
 - A lot of the actions are only available when the doors are locked and the key is not in the vehicle.
+- The gloveblox locking/unlocking appears to be only possible while the vehicle is unlocked (needs confirmation). The Lynk&Co accepts the action when the vehicle is locked, but the glovebox doesn't appear to be locking/unlocking when it is.
 - `temp` is in ºC.
 - `heaters` accepts a list of zones (see table below)
 

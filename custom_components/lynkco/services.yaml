@@ -99,7 +99,6 @@ unlock_door:
         text:
 
 set_navigation:
-  target:
   fields:
     vin:
       selector:

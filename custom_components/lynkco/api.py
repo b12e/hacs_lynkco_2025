@@ -282,7 +282,7 @@ class LynkCoAPI:
                 "longitude": lon,
                 "initiatedAt": now_ms,
                 "expiresAt": expire_ms,
-                "senderName": "Home Assistant",
+                "senderName": self.user_email or "Home Assistant",
             }
         )
 

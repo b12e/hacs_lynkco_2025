@@ -270,10 +270,20 @@ class LynkCoAPI:
             json=[],
         )
 
-    async def send_to_car(self, vin: str, name: str, lat: float, lon: float) -> dict:
-        url = f"{API_BASE}/remote-control/user/authorization/send/to/car"
+    async def send_to_car(self, vin: str, title: str, lat: float, lon: float) -> dict:
+        import time
+        now_ms = int(time.time() * 1000)
+        expire_ms = now_ms + 24 * 60 * 60 * 1000  # 24 hours
+        url = f"{COMMAND_BASE}/vehicle/{vin}/command/set_navigation"
         return await self._request(
-            "POST", url, json={"vin": vin, "name": name, "lat": lat, "lon": lon}
+            "POST", url, json={
+                "title": title,
+                "latitude": lat,
+                "longitude": lon,
+                "initiatedAt": now_ms,
+                "expiresAt": expire_ms,
+                "senderName": "Home Assistant",
+            }
         )
 
     # --- Static helpers for the config flow auth ---

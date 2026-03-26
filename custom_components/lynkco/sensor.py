@@ -105,6 +105,7 @@ SENSOR_TYPES: list[dict] = [
         "unit": None,
         "state_class": None,
         "value_fn": lambda d: _heater_status(d, "steeringWheel"),
+        "heater_key": "steeringWheel",
     },
     {
         "key": "heater_windshield",

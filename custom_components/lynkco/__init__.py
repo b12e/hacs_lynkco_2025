@@ -31,7 +31,11 @@ VALID_HEATERS = [
     "defrost",
 ]
 
-REAR_HEATERS = {"rear_left_seat", "rear_right_seat"}
+OPTIONAL_HEATERS = {
+    "rear_left_seat": "rearLeftSeat",
+    "rear_right_seat": "rearRightSeat",
+    "steering_wheel": "steeringWheel",
+}
 
 SERVICE_FLASH_LIGHTS = "flash_lights"
 SERVICE_HONK_HORN = "honk_horn"
@@ -201,10 +205,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if coordinator and coordinator.data:
                 available = (coordinator.data.get("climate", {}).get("heaters") or {})
                 for h in heaters:
-                    if h in REAR_HEATERS:
-                        api_key = {"rear_left_seat": "rearLeftSeat", "rear_right_seat": "rearRightSeat"}[h]
-                        if available.get(api_key) is None:
-                            raise vol.Invalid(f"Heater zone '{h}' is not available on this vehicle")
+                    api_key = OPTIONAL_HEATERS.get(h)
+                    if api_key and available.get(api_key) is None:
+                        raise vol.Invalid(f"Heater zone '{h}' is not available on this vehicle")
             return [h.upper() for h in heaters]
 
         async def handle_start_heaters(call: ServiceCall) -> None:

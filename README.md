@@ -97,6 +97,8 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 - `temp` is in ºC.
 - `heaters` accepts a list of zones (see table below)
 
+**Note:** Seat and steering wheel heaters require the climate system to be active first (use `start_conditioning` or `start_heaters` with `defrost`). The `defrost` zone can be started independently.
+
 #### Heater zones
 
 | Zone | 01 | 02 | 08 |

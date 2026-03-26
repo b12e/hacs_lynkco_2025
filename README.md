@@ -143,7 +143,7 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 | `steering_wheel` | ✅ * | ✅ *| ✅ * |
 | `defrost` | ✅ | ✅ | ✅ |
 
-\* This is only available on the More-models. The Core models are not equipped with this heating location.
+\Zones marked with an asterisk (*) are only available on the More-models. The Core models are not equipped with these heating locations. This integration doesn't magically equip your vehicle with extra hardware :) 
 
 ### Screenshot
 

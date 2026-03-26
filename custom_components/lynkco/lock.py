@@ -76,7 +76,7 @@ class LynkCoLock(CoordinatorEntity, LockEntity):
 class LynkCoGloveboxLock(CoordinatorEntity, LockEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "glovebox_lock"
-    _attr_code_format = r"^\d{4,6}$"
+    _attr_code_format = r"^\d{4}$"
 
     def __init__(self, coordinator: LynkCoCoordinator, api) -> None:
         super().__init__(coordinator)

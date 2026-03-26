@@ -45,6 +45,13 @@ Data is also refreshed by default 15 seconds after any action is called.
 | Interior temperature | Current cabin temperature | °C | All
 | Target temperature | HVAC target temperature | °C | All
 | Climate status | HVAC state | - | All
+| Steering wheel heater | Heater status (active/inactive/disabled) | - | 01 More / 02 More / 08 More
+| Windshield heater | Heater status | - | All
+| Front left seat heater | Heater status | - | All
+| Front right seat heater | Heater status | - | All
+| Rear left seat heater | Heater status | - | 08 More
+| Rear center seat heater | Heater status | - | 08 More
+| Rear right seat heater | Heater status | - | 08 More
 | Central lock | Lock state (locked/unlocked) | - | All
 | Address | Last known address | - | All
 | Odometer | Total distance driven | km | All

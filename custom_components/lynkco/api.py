@@ -270,6 +270,12 @@ class LynkCoAPI:
             json=[],
         )
 
+    async def send_to_car(self, vin: str, name: str, lat: float, lon: float) -> dict:
+        url = f"{API_BASE}/remote-control/user/authorization/send/to/car"
+        return await self._request(
+            "POST", url, json={"vin": vin, "name": name, "lat": lat, "lon": lon}
+        )
+
     # --- Static helpers for the config flow auth ---
 
     @staticmethod

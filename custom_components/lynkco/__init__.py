@@ -20,6 +20,9 @@ PLATFORMS = ["sensor", "binary_sensor", "device_tracker", "lock"]
 ATTR_VIN = "vin"
 ATTR_PERCENT = "percent"
 ATTR_TEMP = "temp"
+ATTR_NAME = "name"
+ATTR_LATITUDE = "latitude"
+ATTR_LONGITUDE = "longitude"
 
 SERVICE_FLASH_LIGHTS = "flash_lights"
 SERVICE_HONK_HORN = "honk_horn"
@@ -35,6 +38,7 @@ SERVICE_STOP_CONDITIONING = "stop_conditioning"
 SERVICE_REFRESH = "refresh"
 SERVICE_LOCK_DOOR = "lock_door"
 SERVICE_UNLOCK_DOOR = "unlock_door"
+SERVICE_SET_NAVIGATION = "set_navigation"
 
 ALL_SERVICES = [
     SERVICE_FLASH_LIGHTS, SERVICE_HONK_HORN,
@@ -45,6 +49,7 @@ ALL_SERVICES = [
     SERVICE_START_CONDITIONING, SERVICE_STOP_CONDITIONING,
     SERVICE_REFRESH,
     SERVICE_LOCK_DOOR, SERVICE_UNLOCK_DOOR,
+    SERVICE_SET_NAVIGATION,
 ]
 
 VIN_SCHEMA = vol.Schema({vol.Optional(ATTR_VIN): cv.string})
@@ -55,6 +60,12 @@ CHARGE_LIMIT_SCHEMA = vol.Schema({
 CONDITIONING_SCHEMA = vol.Schema({
     vol.Optional(ATTR_VIN): cv.string,
     vol.Required(ATTR_TEMP): vol.All(vol.Coerce(int), vol.Range(min=16, max=28)),
+})
+NAVIGATION_SCHEMA = vol.Schema({
+    vol.Optional(ATTR_VIN): cv.string,
+    vol.Required(ATTR_NAME): cv.string,
+    vol.Required(ATTR_LATITUDE): vol.Coerce(float),
+    vol.Required(ATTR_LONGITUDE): vol.Coerce(float),
 })
 
 ACTION_REFRESH_DELAY = 15  # seconds to wait before refreshing after an action
@@ -208,6 +219,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             await _get_api(hass, vin).unlock_door(vin)
             hass.async_create_task(_delayed_refresh(hass, vin))
 
+        async def handle_set_navigation(call: ServiceCall) -> None:
+            vin = _resolve_vin(hass, call)
+            await _get_api(hass, vin).send_to_car(
+                vin, call.data[ATTR_NAME], call.data[ATTR_LATITUDE], call.data[ATTR_LONGITUDE]
+            )
+
         async def handle_refresh(call: ServiceCall) -> None:
             vin = _resolve_vin(hass, call)
             coordinator = _get_coordinator(hass, vin)
@@ -229,6 +246,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.services.async_register(DOMAIN, SERVICE_STOP_CONDITIONING, handle_stop_conditioning, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_LOCK_DOOR, handle_lock_door, VIN_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_UNLOCK_DOOR, handle_unlock_door, VIN_SCHEMA)
+        hass.services.async_register(DOMAIN, SERVICE_SET_NAVIGATION, handle_set_navigation, NAVIGATION_SCHEMA)
         hass.services.async_register(DOMAIN, SERVICE_REFRESH, handle_refresh, VIN_SCHEMA)
 
     return True

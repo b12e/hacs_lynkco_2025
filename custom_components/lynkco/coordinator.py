@@ -85,5 +85,5 @@ class LynkCoCoordinator(DataUpdateCoordinator):
             "doors": doors,
             "fuel": fuel,
             "metadata": metadata,
-            "last_updated": dt_util.now().isoformat(),
+            "last_updated": dt_util.now(),
         }

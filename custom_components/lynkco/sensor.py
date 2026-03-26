@@ -1,5 +1,7 @@
 """Sensor platform for Lynk & Co integration."""
 
+from datetime import datetime
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -10,6 +12,7 @@ from homeassistant.const import PERCENTAGE, UnitOfEnergy, UnitOfLength, UnitOfPo
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, MANUFACTURER, MODEL_NAMES
 from .coordinator import LynkCoCoordinator
@@ -286,7 +289,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": SensorDeviceClass.TIMESTAMP,
         "unit": None,
         "state_class": None,
-        "value_fn": lambda d: d.get("fuel", {}).get("fuelState", {}).get("updatedAt"),
+        "value_fn": lambda d: _parse_ts(d.get("fuel", {}).get("fuelState", {}).get("updatedAt")),
         "fuel_only": True,
         "entity_registry_enabled_default": False,
     },
@@ -297,7 +300,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": SensorDeviceClass.TIMESTAMP,
         "unit": None,
         "state_class": None,
-        "value_fn": lambda d: (d.get("location", {}).get("vehicleLocation") or {}).get("updatedAt"),
+        "value_fn": lambda d: _parse_ts((d.get("location", {}).get("vehicleLocation") or {}).get("updatedAt")),
         "entity_registry_enabled_default": False,
     },
     {
@@ -307,7 +310,7 @@ SENSOR_TYPES: list[dict] = [
         "device_class": SensorDeviceClass.TIMESTAMP,
         "unit": None,
         "state_class": None,
-        "value_fn": lambda d: d.get("climate", {}).get("updatedAt"),
+        "value_fn": lambda d: _parse_ts(d.get("climate", {}).get("updatedAt")),
         "entity_registry_enabled_default": False,
     },
 ]
@@ -341,6 +344,16 @@ def _battery_kwh(d):
     if capacity is not None and soc is not None:
         return round(capacity * soc, 1)
     return None
+
+def _parse_ts(val):
+    if val is None:
+        return None
+    if isinstance(val, datetime):
+        return val
+    try:
+        return dt_util.parse_datetime(val)
+    except (ValueError, TypeError):
+        return None
 
 def _fuel_liters(d):
     capacity = d.get("metadata", {}).get("fuelInfo", {}).get("tankCapacity")

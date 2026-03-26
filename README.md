@@ -103,8 +103,8 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 |---|---|---|---|
 | `front_left_seat` | ✅ | ✅ | ✅ |
 | `front_right_seat` | ✅ | ✅ | ✅ |
-| `rear_left_seat` | | | ✅ (More only) |
-| `rear_right_seat` | | | ✅ (More only) |
+| `rear_left_seat` | ❌ | ❌ | ✅ (More only) |
+| `rear_right_seat` | ❌ | ❌ | ✅ (More only) |
 | `steering_wheel` | ✅ (More only) | ✅ (More only) | ✅ (More only) |
 | `defrost` | ✅ | ✅ | ✅ |
 

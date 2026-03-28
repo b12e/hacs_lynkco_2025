@@ -39,6 +39,7 @@ MODEL_NAMES = {
 }
 
 DEFAULT_SCAN_INTERVAL = 900  # 15 minutes
+DRIVING_SCAN_INTERVAL = 60  # 1 minute when car is running
 
 # Config keys
 CONF_ACCESS_TOKEN = "access_token"

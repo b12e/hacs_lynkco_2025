@@ -17,9 +17,9 @@ Other models are currently not available on the EU market, although it is likely
 
 ## Polling
 
-Vehicle data is polled every 15 minutes by default. If you want to poll more frequently, you can do so using Home Assistant automations by calling the update action, although I don't recommend to update more often clock-round.
+Vehicle data is polled every 15 minutes by default. When the car is running, the polling interval automatically increases to every 60 seconds for more accurate location tracking, and reverts to 15 minutes when the car stops.
 
-Data is also refreshed by default 10 seconds after any action is called.
+When you perform an action (e.g. lock the doors or start the heaters), only the relevant data is refreshed — not everything. The integration checks for a state change after 3 seconds, and if the car hasn't processed the command yet, retries after 5 and then 10 seconds before giving up. Fire-and-forget actions like flashing the lights or honking the horn don't trigger a refresh at all.
 
 ## ⚠️ Limitations
 

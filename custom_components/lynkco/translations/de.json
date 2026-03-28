@@ -165,7 +165,7 @@
     },
     "start_ventilate": {
       "name": "Belüftung starten",
-      "description": "Die Belüftung des Fahrzeugs starten.",
+      "description": "Alle Fenster leicht öffnen, um das Fahrzeug zu belüften.",
       "fields": {
         "vin": {
           "name": "FIN",
@@ -175,7 +175,7 @@
     },
     "stop_ventilate": {
       "name": "Belüftung stoppen",
-      "description": "Die Belüftung des Fahrzeugs stoppen.",
+      "description": "Die zur Belüftung geöffneten Fenster schließen.",
       "fields": {
         "vin": {
           "name": "FIN",

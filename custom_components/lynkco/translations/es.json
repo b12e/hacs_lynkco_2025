@@ -165,7 +165,7 @@
     },
     "start_ventilate": {
       "name": "Iniciar ventilación",
-      "description": "Iniciar la ventilación del vehículo.",
+      "description": "Abrir ligeramente todas las ventanillas para ventilar el vehículo.",
       "fields": {
         "vin": {
           "name": "VIN",
@@ -175,7 +175,7 @@
     },
     "stop_ventilate": {
       "name": "Detener ventilación",
-      "description": "Detener la ventilación del vehículo.",
+      "description": "Cerrar las ventanillas abiertas para la ventilación.",
       "fields": {
         "vin": {
           "name": "VIN",

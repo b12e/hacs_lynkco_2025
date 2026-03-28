@@ -165,7 +165,7 @@
     },
     "start_ventilate": {
       "name": "Start ventilation",
-      "description": "Start the vehicle's ventilation.",
+      "description": "Open all windows slightly to ventilate the vehicle.",
       "fields": {
         "vin": {
           "name": "VIN",
@@ -175,7 +175,7 @@
     },
     "stop_ventilate": {
       "name": "Stop ventilation",
-      "description": "Stop the vehicle's ventilation.",
+      "description": "Close the windows opened by ventilation.",
       "fields": {
         "vin": {
           "name": "VIN",

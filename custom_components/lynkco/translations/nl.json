@@ -165,7 +165,7 @@
     },
     "start_ventilate": {
       "name": "Ventilatie starten",
-      "description": "Start de ventilatie van het voertuig.",
+      "description": "Zet alle ramen op een kier om het voertuig te ventileren.",
       "fields": {
         "vin": {
           "name": "VIN",
@@ -175,7 +175,7 @@
     },
     "stop_ventilate": {
       "name": "Ventilatie stoppen",
-      "description": "Stop de ventilatie van het voertuig.",
+      "description": "Sluit de ramen die voor ventilatie geopend zijn.",
       "fields": {
         "vin": {
           "name": "VIN",

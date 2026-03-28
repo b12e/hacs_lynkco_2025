@@ -217,12 +217,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         async def handle_start_ventilate(call: ServiceCall) -> None:
             vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).start_ventilate(vin)
-            _targeted_refresh(hass, vin, "climate", "get_climate_state")
+            _targeted_refresh(hass, vin, "doors", "get_doors_windows")
 
         async def handle_stop_ventilate(call: ServiceCall) -> None:
             vin = _resolve_vin(hass, call)
             await _get_api(hass, vin).stop_ventilate(vin)
-            _targeted_refresh(hass, vin, "climate", "get_climate_state")
+            _targeted_refresh(hass, vin, "doors", "get_doors_windows")
 
         def _validate_heaters(hass: HomeAssistant, vin: str, heaters: list[str]) -> list[str]:
             coordinator = _get_coordinator(hass, vin)

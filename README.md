@@ -115,8 +115,8 @@ All actions (except `lynkco.refresh`) accept an optional `vin` parameter. When o
 | `lynkco.set_charge_limit` | Set charge limit | `percent` (50-100) | ✅ | ✅ | t.b.c.
 | `lynkco.start_conditioning` | Start air conditioning | `temp` (16-28) |✅ | ✅ | t.b.c.
 | `lynkco.stop_conditioning` | Stop air conditioning | | ✅ | ✅ | t.b.c
-| `lynkco.start_ventilate` | Start ventilation | | t.b.c. |✅| t.b.c.
-| `lynkco.stop_ventilate` | Stop ventilation | | t.b.c. | ✅ |  t.b.c.
+| `lynkco.start_ventilate` | Open all windows slightly to ventilate | | ✅ |✅| t.b.c.
+| `lynkco.stop_ventilate` | Close ventilation windows | | ✅ | ✅ |  t.b.c.
 | `lynkco.start_heaters` | Start heaters | `heaters` (list) | ✅ |  t.b.c.| t.b.c. |
 | `lynkco.stop_heaters` | Stop heaters | `heaters` (list) | ✅ | t.b.c. | t.b.c. |
 | `lynkco.lock_glovebox` | Lock the glovebox | `pin` (4 digits) | ✅ | t.b.c. | t.b.c. |
